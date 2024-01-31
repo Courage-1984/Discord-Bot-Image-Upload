@@ -7,7 +7,7 @@ See 'lol.py' for script.
 
 Steps:
 
-1. Download the `lol.py` script in the repo above.
+1. Download the [lol.py](https://github.com/Courage-1984/Discord-Bot-Image-Upload/blob/main/lol.py) script in the repo above.
 2. Create a folder to put the `lol.py` script in.
 3. Open a terminal in that folder location.
 4. In that terminal run the following:
@@ -19,9 +19,9 @@ Steps:
 
 **See the following:**
 
-[How to Get Your Discord Bot Token](https://www.youtube.com/watch?v=aI4OmIbkJH8)
+- [How to Get Your Discord Bot Token](https://www.youtube.com/watch?v=aI4OmIbkJH8)
 
-[How to Get Server ID, Channel ID, User ID in Discord - Copy ID's](https://www.youtube.com/watch?v=NLWtSHWKbAI)
+- [How to Get Server ID, Channel ID, User ID in Discord - Copy ID's](https://www.youtube.com/watch?v=NLWtSHWKbAI)
 
 6. Navigate to [https://discord.com/developers/applications](https://discord.com/developers/applications) and click on your application.
 7. Click on the `Bot` option in the left navbar and make sure to enable the following: `Presence Intent`, `Server Members Intent` and `Message Content Intent`.
