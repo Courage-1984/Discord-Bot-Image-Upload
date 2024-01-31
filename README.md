@@ -40,7 +40,9 @@ Steps:
 16. Now your script/bot should run smoothly and send all the files in the directory you provided.
 
 **PS:**
+
 `Discord bot token`, `server ID` and `folder location of files` should all be enclosed in single qoutations while:
+
 `channel ID` should not be enclosed in qoutations at all.
 
 ***
