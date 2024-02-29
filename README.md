@@ -37,7 +37,15 @@ Steps:
   python lol.py
 ```
 
-16. Now your script/bot should run smoothly and send all the files in the directory you provided while skipping files that was already sent in the channel.
+16. Wait a min for bot to start up and connect.
+
+17. In your chosen channel send the following command:
+ 
+```sh
+  !send_files
+```
+
+18. Now your script/bot should run smoothly and send all the files in the directory you provided while skipping files that was already sent in the channel.
 
 **PS:**
 
