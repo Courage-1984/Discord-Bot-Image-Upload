@@ -1,7 +1,9 @@
 import discord
 import os
 import asyncio
-import hashlib
+import json
+
+LOG_FILE_PATH = 'uploaded_files_log_gallery_name.json'
 
 # Replace 'YOUR_BOT_TOKEN' with your actual bot token
 TOKEN = 'YOUR_BOT_TOKEN'
@@ -19,48 +21,43 @@ intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 
 async def send_files_in_chronological_order(channel, files):
-    # Sort files based on a custom sorting function
     files.sort(key=lambda x: (get_file_mtime(x[0]), x[1]))
 
-    # Mapping for Discord-renamed file names
-    renamed_file_mapping = await get_renamed_file_mapping(channel)
+    uploaded_files_log = load_uploaded_files_log()
 
     for relative_path, file_name in files:
         file_path = os.path.join(FOLDER_PATH, relative_path)
 
-        # Check if the file already exists in the channel
-        existing_files = await get_existing_files(channel)
-
-        # Get the Discord-renamed file name from the mapping
-        discord_renamed_file_name = renamed_file_mapping.get(file_name, file_name)
-
-        # Replace spaces with underscores for comparison
-        discord_renamed_file_name_for_comparison = discord_renamed_file_name.replace(' ', '_')
-
-        if discord_renamed_file_name_for_comparison in existing_files:
+        # Use case-insensitive comparison with full path
+        if os.path.normcase(os.path.abspath(file_path)) in uploaded_files_log:
             print(f"Skipping file '{file_name}' as it already exists in the channel.")
             continue
 
+        file_size = os.path.getsize(file_path)
+        if file_size > 26210390:  # Discord's limit for regular users
+            print(f"Skipping file '{file_name}' as it exceeds Discord's maximum file size limit.")
+            continue
+
         with open(file_path, 'rb') as f:
-            # Use the Discord-renamed file name when sending
-            await channel.send(file=discord.File(f, filename=discord_renamed_file_name))
-        await asyncio.sleep(3)  # Adjust delay if needed
+            await channel.send(file=discord.File(f, filename=file_name))
 
-async def get_existing_files(channel):
-    existing_files = set()
-    async for message in channel.history(limit=None):  # None means no limit
-        for attachment in message.attachments:
-            existing_files.add(attachment.filename.replace(' ', '_'))
-    return existing_files
+        uploaded_files_log.add(os.path.normcase(os.path.abspath(file_path)))
 
-async def get_renamed_file_mapping(channel):
-    # Build a mapping of original file names to Discord-renamed file names
-    renamed_file_mapping = {}
-    async for message in channel.history(limit=None):  # None means no limit
-        for attachment in message.attachments:
-            original_file_name = os.path.basename(attachment.url)
-            renamed_file_mapping[original_file_name] = attachment.filename
-    return renamed_file_mapping
+        # Append the uploaded file to the log file
+        save_uploaded_files_log(uploaded_files_log)
+
+        await asyncio.sleep(1.8)  # Adjust delay if needed
+
+def load_uploaded_files_log():
+    try:
+        with open(LOG_FILE_PATH, 'r') as log_file:
+            return set(json.load(log_file))
+    except (FileNotFoundError, json.JSONDecodeError):
+        return set()
+
+def save_uploaded_files_log(log_data):
+    with open(LOG_FILE_PATH, 'w') as log_file:
+        json.dump(list(log_data), log_file)
 
 def get_file_mtime(file_path):
     try:
@@ -72,7 +69,6 @@ def get_file_mtime(file_path):
 async def on_ready():
     print(f'We have logged in as {client.user}')
 
-    server = discord.utils.get(client.guilds, id=SERVER_ID)
     channel = client.get_channel(CHANNEL_ID)
 
     files_to_send = []
