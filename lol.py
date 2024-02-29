@@ -26,14 +26,14 @@ async def send_files_in_chronological_order(channel, files):
     uploaded_files_log = load_uploaded_files_log()
 
     for relative_path, file_name in files:
-        file_path = os.path.join(FOLDER_PATH, relative_path)
-
-        # Use case-insensitive comparison with full path
-        if os.path.normcase(os.path.abspath(file_path)) in uploaded_files_log:
+        # Use case-insensitive comparison with filenames
+        if os.path.normcase(file_name) in uploaded_files_log:
             print(f"Skipping file '{file_name}' as it already exists in the channel.")
             continue
 
+        file_path = os.path.join(FOLDER_PATH, relative_path)
         file_size = os.path.getsize(file_path)
+
         if file_size > 26210390:  # Discord's limit for regular users
             print(f"Skipping file '{file_name}' as it exceeds Discord's maximum file size limit.")
             continue
@@ -41,7 +41,7 @@ async def send_files_in_chronological_order(channel, files):
         with open(file_path, 'rb') as f:
             await channel.send(file=discord.File(f, filename=file_name))
 
-        uploaded_files_log.add(os.path.normcase(os.path.abspath(file_path)))
+        uploaded_files_log.add(os.path.normcase(file_name))
 
         # Append the uploaded file to the log file
         save_uploaded_files_log(uploaded_files_log)
