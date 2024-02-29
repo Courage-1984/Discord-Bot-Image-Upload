@@ -1,7 +1,7 @@
 # Discord-Bot-Image-Upload
 A Script/Bot to upload local files (like images, gifs and videos) to a Discord server channel.
 
-**This bot/script recursively looks for files in a directory, adds them all to a list, sorts that list in `chronological order` based on `Date modified` and then sends the files in that order and then the sent file's path and name gets added to a log file. It also checks a log file (if it already exists) for if a file to be sent has already been sent on the channel and then skips that file if it has already been sent and sends files that have not been sent.**
+**This bot/script recursively looks for files in a directory, adds them all to a list, sorts that list in `chronological order` based on `Date modified` and then sends the files in that order and then the sent file's name gets added to a log file. It also checks a log file (if it already exists) for if a file to be sent has already been sent on the channel and then skips that file if it has already been sent and sends files that have not been sent.**
 
 See 'lol.py' for script.
 
