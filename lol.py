@@ -16,16 +16,23 @@ CHANNEL_ID = CHANNEL_ID  # Replace with your channel ID
 # Path to your folder with the files in it (videos and images, etc.)
 FOLDER_PATH = 'C:/path/to/folder/containing/files'
 
+
 # Define your intents
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
-client = discord.Client(intents=intents)
+
+# Variable to track whether all files have been sent
+all_files_sent = False
 
 async def send_files_in_chronological_order(channel, files):
-    files.sort(key=lambda x: (get_file_mtime(x[0]), x[1]))
+    global all_files_sent
+    files.sort(key=lambda x: (get_file_mtime(os.path.join(FOLDER_PATH, x[0])), x[1]))
     uploaded_files_log = load_uploaded_files_log()
 
     for relative_path, file_name in files:
+        if all_files_sent:
+            break  # Break the loop if all files have been sent
+
         if os.path.normcase(file_name) in uploaded_files_log:
             print(f"Skipping file '{file_name}' as it already exists in the channel.")
             continue
@@ -59,6 +66,10 @@ async def send_files_in_chronological_order(channel, files):
 
         print(f"File '{file_name}' sent successfully.")
         await asyncio.sleep(4)  # Adjust delay if needed
+
+    all_files_sent = True  # Set the variable to True when all files are sent
+
+
 
 def load_uploaded_files_log():
     try:
@@ -101,6 +112,7 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
+
 @bot.command()
 async def send_files(ctx):
     channel = ctx.channel
@@ -112,5 +124,8 @@ async def send_files(ctx):
         files_to_send.extend(files_with_relative_path)
 
     await send_files_in_chronological_order(channel, files_to_send)
+
+    # Stop the bot after sending all files
+    await bot.close()
 
 bot.run(TOKEN)
