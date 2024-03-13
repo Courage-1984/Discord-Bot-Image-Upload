@@ -13,10 +13,6 @@ TOKEN = 'YOUR_BOT_TOKEN'
 SERVER_ID = 'SERVER_ID'  # Replace with your server ID
 CHANNEL_ID = CHANNEL_ID  # Replace with your channel ID
 
-# Path to your folder with the files in it (videos and images, etc.)
-FOLDER_PATH = 'C:/path/to/folder/containing/files'
-
-
 # Define your intents
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
