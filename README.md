@@ -21,6 +21,11 @@ Steps:
 
 - [How to Get Your Discord Bot Token](https://www.youtube.com/watch?v=aI4OmIbkJH8)
 
+OR:
+
+![dc bot token](https://github.com/Courage-1984/Discord-Bot-Image-Upload/assets/18268669/c095f6ef-5c1c-42fb-be68-5b1221d24c8d)
+
+
 - [How to Get Server ID, Channel ID, User ID in Discord - Copy ID's](https://www.youtube.com/watch?v=NLWtSHWKbAI)
 
 6. Navigate to [https://discord.com/developers/applications](https://discord.com/developers/applications) and click on your application.
